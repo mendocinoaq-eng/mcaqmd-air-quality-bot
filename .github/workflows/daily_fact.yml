@@ -1,0 +1,31 @@
+name: Post Daily Air Quality Fact to Facebook via Buffer
+
+on:
+  schedule:
+    # 5:00 PM Pacific Time (00:00 UTC next day)
+    - cron: '0 0 * * *'
+
+  # Lets you trigger a test run manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  post-daily-fact:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests pytz
+
+      - name: Run daily fact poster
+        env:
+          BUFFER_API_KEY:    ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_CHANNEL_ID: ${{ secrets.BUFFER_CHANNEL_ID }}
+        run: python post_daily_fact.py
