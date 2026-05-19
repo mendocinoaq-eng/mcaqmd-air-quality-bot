@@ -6,6 +6,7 @@ Runs via GitHub Actions twice daily.
 """
 
 import os
+import time
 import requests
 from datetime import datetime
 import pytz
@@ -41,8 +42,8 @@ def aqi_health_tip(aqi):
         return "Everyone should avoid prolonged outdoor exertion. Sensitive groups should remain indoors."
     return "Health alert: Everyone should avoid all outdoor exertion and remain indoors."
 
-# ── Fetch AirNow data ──────────────────────────────────────────────────────────
-def get_air_quality():
+# ── Fetch AirNow data (with retry) ────────────────────────────────────────────
+def get_air_quality(retries=3, delay=10):
     url = "https://www.airnowapi.org/aq/observation/zipCode/current/"
     params = {
         "format":   "application/json",
@@ -50,9 +51,21 @@ def get_air_quality():
         "distance": 25,
         "API_KEY":  AIRNOW_API_KEY,
     }
-    resp = requests.get(url, params=params, timeout=15)
-    resp.raise_for_status()
-    return resp.json()
+    for attempt in range(1, retries + 1):
+        try:
+            print(f"AirNow request attempt {attempt} of {retries}...")
+            resp = requests.get(url, params=params, timeout=30)
+            resp.raise_for_status()
+            return resp.json()
+        except requests.exceptions.Timeout:
+            print(f"Attempt {attempt} timed out.")
+            if attempt < retries:
+                print(f"Waiting {delay} seconds before retrying...")
+                time.sleep(delay)
+            else:
+                raise RuntimeError("AirNow API timed out after all retries. Will try again at next scheduled run.")
+        except requests.exceptions.RequestException as e:
+            raise RuntimeError(f"AirNow API error: {e}")
 
 # ── Build post text ────────────────────────────────────────────────────────────
 def build_message(data):
@@ -131,7 +144,7 @@ def post_to_buffer(message):
         BUFFER_API_URL,
         json={"query": mutation, "variables": variables},
         headers=headers,
-        timeout=15,
+        timeout=30,
     )
     resp.raise_for_status()
     result = resp.json()
@@ -141,7 +154,6 @@ def post_to_buffer(message):
 
     post_result = result["data"]["createPost"]
 
-    # If it's not a success it will have a "message" field with the error
     if "message" in post_result:
         raise RuntimeError(f"Buffer rejected post: {post_result['message']}")
 
@@ -163,4 +175,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
