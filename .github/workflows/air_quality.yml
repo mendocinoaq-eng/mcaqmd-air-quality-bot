@@ -1,4 +1,4 @@
-name: Post Air Quality to Facebook via Buffer
+name:  Post Air Quality to Facebook via Buffer
 
 on:
   schedule:
