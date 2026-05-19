@@ -1,4 +1,4 @@
-name: Post Daily Air Quality Fact to Facebook via Buffer
+name:  Post Daily Air Quality Fact to Facebook via Buffer
 
 on:
   schedule:
