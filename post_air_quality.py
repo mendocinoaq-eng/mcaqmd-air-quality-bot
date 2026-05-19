@@ -113,9 +113,14 @@ def post_to_buffer(message):
         "input": {
             "text":           message,
             "channelId":      BUFFER_CHANNEL_ID,
-            "schedulingType": "automatic",  # automatic = Buffer publishes it directly
-            "mode":           "shareNow",   # shareNow = post immediately, no queue
-            "assets":         [],           # required field, empty for text-only post
+            "schedulingType": "automatic",
+            "mode":           "shareNow",
+            "assets":         [],
+            "metadata": {
+                "facebook": {
+                    "type": "post"
+                }
+            }
         }
     }
     headers = {
@@ -158,3 +163,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
