@@ -1,4 +1,4 @@
-name: Post Ozone to Facebook via Buffer
+name:  Post Ozone to Facebook via Buffer
 
 on:
   schedule:
