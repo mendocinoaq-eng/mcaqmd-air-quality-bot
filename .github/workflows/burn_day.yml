@@ -1,0 +1,30 @@
+name: Post Burn Day Status to Facebook via Buffer
+
+on:
+  # Lets you trigger a test run manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  post-burn-day:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests pytz
+
+      - name: Run burn day poster
+        env:
+          GMAIL_CLIENT_ID:     ${{ secrets.GMAIL_CLIENT_ID }}
+          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
+          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
+          BUFFER_API_KEY:      ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_CHANNEL_ID:   ${{ secrets.BUFFER_CHANNEL_ID }}
+        run: python post_burn_day.py
