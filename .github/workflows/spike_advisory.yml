@@ -1,0 +1,42 @@
+name: Hourly PM2.5 Spike Advisory
+
+on:
+  # Lets you trigger a test run manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  check-spike:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Restore spike state from cache
+        uses: actions/cache@v4
+        with:
+          path: spike_state.json
+          key: spike-state-${{ runner.os }}
+          restore-keys: |
+            spike-state-
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests pytz
+
+      - name: Run spike checker
+        env:
+          AIRNOW_API_KEY:    ${{ secrets.AIRNOW_API_KEY }}
+          BUFFER_API_KEY:    ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_CHANNEL_ID: ${{ secrets.BUFFER_CHANNEL_ID }}
+        run: python post_spike_advisory.py
+
+      - name: Save spike state to cache
+        uses: actions/cache@v4
+        with:
+          path: spike_state.json
+          key: spike-state-${{ runner.os }}
