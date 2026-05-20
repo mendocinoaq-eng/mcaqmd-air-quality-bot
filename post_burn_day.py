@@ -174,14 +174,14 @@ def build_burn_day_message(burn_date, raw_status):
             "• Never burn garbage, treated wood, or plastics\n"
             "• Extinguish completely before leaving\n"
             "• Stop burning if smoke impacts neighbors"
-	    "• ALL Open Outdoor Burning required an MCAQMD Burn Permit" 
-            "•and a Fire Permit from Cal Fire or your local Fire Agency"
+	        "• ALL Open Outdoor Burning requires an MCAQMD Burn Permit" 
+            " and a Fire Permit from Cal Fire or your local Fire Agency"
         )
     elif "no burn" in status_lower or "prohibited" in status_lower:
         emoji       = "🚫"
         status_line = "NO BURN DAY"
         detail      = (
-            "All open outdoor burning IS NOT permitted.\n"
+            "All open outdoor burning IS prohibited.\n"
             "Violations may result in fines."
         )
     elif "spare the air" in status_lower:
