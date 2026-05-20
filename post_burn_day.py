@@ -169,13 +169,14 @@ def build_burn_day_message(burn_date, raw_status):
         emoji       = "✅"
         status_line = "PERMISSIVE BURN DAY"
         detail      = (
-            "Open Outdoor Burning IS permitted. Always follow all applicable regulations:\n"
-            "• Use only clean, dry wood\n"
+            "Open Outdoor Burning IS permitted. Always follow all applicable regulations.\n"
+            "• Burn only clean, dry wood\n"
+			"• Do not burn any material imported from outside the bounds of the property\n"
             "• Never burn garbage, treated wood, or plastics\n"
             "• Extinguish completely before leaving\n"
-            "• Stop burning if smoke impacts neighbors"
-	        "• ALL Open Outdoor Burning requires an MCAQMD Burn Permit" 
-            " and a Fire Permit from Cal Fire or your local Fire Agency"
+            "• Stop burning if smoke impacts neighbors\n"
+	        "• ALL Open Outdoor Burning requires an MCAQMD Burn Permit\n" 
+            "and a Fire Permit from Cal Fire or your local Fire Agency."
         )
     elif "no burn" in status_lower or "prohibited" in status_lower:
         emoji       = "🚫"
