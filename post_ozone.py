@@ -27,11 +27,11 @@ def aqi_category(aqi):
     if aqi <= 150:  return "Unhealthy for Sensitive Groups 🟠"
     if aqi <= 200:  return "Unhealthy 🔴"
     if aqi <= 300:  return "Very Unhealthy 🟣"
-    return "Hazardous ⚫"
+    return "Hazardous 🟤"
 
 def aqi_health_tip(aqi):
     if aqi <= 50:
-        return "Ozone levels are low — a great day for outdoor activities!"
+        return "Ozone levels are low — a great time for outdoor activities!"
     if aqi <= 100:
         return "Ozone levels are acceptable. Unusually sensitive people may want to limit extended time outdoors during the warmest part of the day."
     if aqi <= 150:
@@ -70,7 +70,14 @@ def get_air_quality(retries=3, delay=10):
 # ── Build post text ────────────────────────────────────────────────────────────
 def build_message(data):
     now = datetime.now(TIMEZONE)
-    time_of_day = "Morning" if now.hour < 12 else "Afternoon"
+    if now.hour < 12:
+        time_of_day = "Morning"
+    elif now.hour < 17:
+        time_of_day = "Afternoon"
+    elif now.hour < 21:
+        time_of_day = "Evening"
+    else:
+        time_of_day = "Overnight"
     date_str = now.strftime("%A, %B %d, %Y")
 
     # Look specifically for the Ozone reading
