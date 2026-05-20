@@ -27,11 +27,11 @@ def aqi_category(aqi):
     if aqi <= 150:  return "Unhealthy for Sensitive Groups 🟠"
     if aqi <= 200:  return "Unhealthy 🔴"
     if aqi <= 300:  return "Very Unhealthy 🟣"
-    return "Hazardous ⚫"
+    return "Hazardous 🟤"
 
 def aqi_health_tip(aqi):
     if aqi <= 50:
-        return "Air quality is great — a perfect day to enjoy the outdoors!"
+        return "Air quality is great — a perfect time to enjoy the outdoors!"
     if aqi <= 100:
         return "Air quality is acceptable. Unusually sensitive people should consider limiting prolonged outdoor exertion."
     if aqi <= 150:
@@ -70,9 +70,15 @@ def get_air_quality(retries=3, delay=10):
 # ── Build post text ────────────────────────────────────────────────────────────
 def build_message(data):
     now = datetime.now(TIMEZONE)
-    time_of_day = "Morning" if now.hour < 12 else "Afternoon"
+    if now.hour < 12:
+        time_of_day = "Morning"
+    elif now.hour < 17:
+        time_of_day = "Afternoon"
+    elif now.hour < 21:
+        time_of_day = "Evening"
+    else:
+        time_of_day = "Overnight"
     date_str = now.strftime("%A, %B %d, %Y")
-
     pm25    = next((d for d in data if d.get("ParameterName") == "PM2.5"), None)
     reading = pm25 or (data[0] if data else None)
 
