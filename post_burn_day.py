@@ -170,11 +170,11 @@ def build_burn_day_message(burn_date, raw_status):
         status_line = "PERMISSIVE BURN DAY"
         detail      = (
             "Open Outdoor Burning IS permitted. Always follow all applicable regulations.\n"
-            "• Burn only clean, dry wood\n"
+            "• Burn only clean, dry vegetative material\n"
 			"• Do not burn any material imported from outside the bounds of the property\n"
-            "• Never burn garbage, treated wood, or plastics\n"
-            "• Extinguish completely before leaving\n"
-            "• Stop burning if smoke impacts neighbors\n"
+            "• Never burn garbage, treated wood, lumber, or plastics\n"
+            "• Extinguish completely before leaving and only burn during allowed burn hours\n"
+            "• All burn piles must be attended by an adult\n"
 	        "• ALL Open Outdoor Burning requires an MCAQMD Burn Permit\n" 
             "and a Fire Permit from Cal Fire or your local Fire Agency."
         )
