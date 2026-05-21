@@ -115,7 +115,7 @@ def build_burn_day_message(burn_date, raw_status):
             "• Do not burn any material imported from outside the bounds of the property\n"
             "• Never burn garbage, treated wood, or plastics\n"
             "• Burn hours are 9 AM to 3 PM\n"
-	    "• Burn piles are limited to 4' x 4', unless otherwise stated by a fire agency\n
+	    "• Burn piles are limited to 4 x 4 feet, unless otherwise stated by a fire agency\n
             "• Stop burning if smoke impacts neighbors\n"
             "• ALL Open Outdoor Burning requires an MCAQMD Burn Permit and a Fire Permit from Cal Fire or your local Fire Agency."
         )
