@@ -22,9 +22,6 @@ jobs:
 
       - name: Run burn day poster
         env:
-          GMAIL_CLIENT_ID:     ${{ secrets.GMAIL_CLIENT_ID }}
-          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
-          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
-          BUFFER_API_KEY:      ${{ secrets.BUFFER_API_KEY }}
-          BUFFER_CHANNEL_ID:   ${{ secrets.BUFFER_CHANNEL_ID }}
+          BUFFER_API_KEY:    ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_CHANNEL_ID: ${{ secrets.BUFFER_CHANNEL_ID }}
         run: python post_burn_day.py
