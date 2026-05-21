@@ -7,6 +7,11 @@ on:
 
   # Lets you trigger a test run manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      burn_status:
+        description: 'Burn status subject line for manual testing'
+        required: false
+        default: 'Burn Call for Mendocino County: Thursday, May 21, 2026 is a Permissive Burn Day'
 
 jobs:
   post-burn-day:
@@ -26,9 +31,9 @@ jobs:
 
       - name: Run burn day poster
         env:
-          AZURE_CLIENT_ID:     ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          AZURE_TENANT_ID:     ${{ secrets.AZURE_TENANT_ID }}
-          BUFFER_API_KEY:      ${{ secrets.BUFFER_API_KEY }}
-          BUFFER_CHANNEL_ID:   ${{ secrets.BUFFER_CHANNEL_ID }}
+          BUFFER_API_KEY:    ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_CHANNEL_ID: ${{ secrets.BUFFER_CHANNEL_ID }}
+          # Use dispatch payload if triggered by Power Automate,
+          # otherwise use manual input for testing
+          BURN_STATUS: ${{ github.event.client_payload.burn_status || github.event.inputs.burn_status }}
         run: python post_burn_day.py
