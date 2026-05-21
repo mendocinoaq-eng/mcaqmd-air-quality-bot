@@ -22,6 +22,9 @@ jobs:
 
       - name: Run burn day poster
         env:
-          BUFFER_API_KEY:    ${{ secrets.BUFFER_API_KEY }}
-          BUFFER_CHANNEL_ID: ${{ secrets.BUFFER_CHANNEL_ID }}
+          AZURE_CLIENT_ID:     ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_TENANT_ID:     ${{ secrets.AZURE_TENANT_ID }}
+          BUFFER_API_KEY:      ${{ secrets.BUFFER_API_KEY }}
+          BUFFER_CHANNEL_ID:   ${{ secrets.BUFFER_CHANNEL_ID }}
         run: python post_burn_day.py
