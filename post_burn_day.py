@@ -24,7 +24,7 @@ AZURE_TENANT_ID     = os.environ["AZURE_TENANT_ID"]
 BUFFER_API_KEY      = os.environ["BUFFER_API_KEY"]
 BUFFER_CHANNEL_ID   = os.environ["BUFFER_CHANNEL_ID"]
 
-INBOX_EMAIL    = "mcaqmd@mendocinocounty.gov"
+INBOX_EMAIL    = "sargentic@mendocinocounty.gov"
 TIMEZONE       = pytz.timezone("America/Los_Angeles")
 BUFFER_API_URL = "https://api.buffer.com"
 
