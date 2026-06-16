@@ -31,16 +31,16 @@ def aqi_category(aqi):
 
 def aqi_health_tip(aqi):
     if aqi <= 50:
-        return "Air quality is great — a perfect time to enjoy the outdoors!"
+        return "Air quality is great — a perfect time to enjoy the outdoors! Please be advised that as of June 15 2026 Cal Fire has announced a Burn Ban for all open outdoor burning in Mendocino County in effect until further notice."
     if aqi <= 100:
-        return "Air quality is acceptable. Unusually sensitive people should consider limiting prolonged outdoor exertion."
+        return "Air quality is acceptable. Unusually sensitive people should consider limiting prolonged outdoor exertion. Please be advised that as of June 15 2026 Cal Fire has announced a Burn Ban for all open outdoor burning in Mendocino County in effect until further notice"
     if aqi <= 150:
-        return "Members of sensitive groups (children, elderly, those with heart or lung conditions) should reduce prolonged outdoor exertion."
+        return "Members of sensitive groups (children, elderly, those with heart or lung conditions) should reduce prolonged outdoor exertion. Please be advised that as of June 15 2026 Cal Fire has announced a Burn Ban for all open outdoor burning in Mendocino County in effect until further notice"
     if aqi <= 200:
-        return "Everyone should reduce prolonged outdoor exertion. Sensitive groups should avoid outdoor activity."
+        return "Everyone should reduce prolonged outdoor exertion. Sensitive groups should avoid outdoor activity. Please be advised that as of June 15 2026 Cal Fire has announced a Burn Ban for all open outdoor burning in Mendocino County in effect until further notice"
     if aqi <= 300:
-        return "Everyone should avoid prolonged outdoor exertion. Sensitive groups should remain indoors."
-    return "Health alert: Everyone should avoid all outdoor exertion and remain indoors."
+        return "Everyone should avoid prolonged outdoor exertion. Sensitive groups should remain indoors. Please be advised that as of June 15 2026 Cal Fire has announced a Burn Ban for all open outdoor burning in Mendocino County in effect until further notice"
+    return "Health alert: Everyone should avoid all outdoor exertion and remain indoors. Please be advised that as of June 15 2026 Cal Fire has announced a Burn Ban for all open outdoor burning in effect until further notice"
 
 # ── Fetch AirNow data (with retry) ────────────────────────────────────────────
 def get_air_quality(retries=3, delay=10):
