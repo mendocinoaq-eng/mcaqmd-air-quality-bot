@@ -19,6 +19,7 @@ BUFFER_CHANNEL_ID = os.environ["BUFFER_CHANNEL_ID"]
 UKIAH_ZIP      = "95482"
 TIMEZONE       = pytz.timezone("America/Los_Angeles")
 BUFFER_API_URL = "https://api.buffer.com"
+AQMD_LOGO_URL = "https://raw.githubusercontent.com/mendocinoaq-eng/mcaqmd-air-quality-bot/main/images/aqmd_logo.png"
 
 # ── AQI helpers ────────────────────────────────────────────────────────────────
 def aqi_category(aqi):
@@ -134,7 +135,12 @@ def post_to_buffer(message):
             "channelId":      BUFFER_CHANNEL_ID,
             "schedulingType": "automatic",
             "mode":           "shareNow",
-            "assets":         [],
+            "assets":         [
+                {
+        "url": AQMD_LOGO_URL,
+        "type": "image"
+    }
+            ],
             "metadata": {
                 "facebook": {
                     "type": "post"
