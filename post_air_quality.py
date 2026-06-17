@@ -158,6 +158,10 @@ def post_to_buffer(message):
         headers=headers,
         timeout=30,
     )
+
+    print("Buffer response:")
+    print(resp.text)
+    
     resp.raise_for_status()
     result = resp.json()
 
