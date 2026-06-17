@@ -18,7 +18,7 @@ BUFFER_CHANNEL_ID = os.environ["BUFFER_CHANNEL_ID"]
 
 UKIAH_ZIP      = "95482"
 TIMEZONE       = pytz.timezone("America/Los_Angeles")
-BUFFER_API_URL = "https://api.buffer.com"
+BUFFER_API_URL = "https://api.buffer.com/graphql"
 AQMD_LOGO_URL = "https://raw.githubusercontent.com/mendocinoaq-eng/mcaqmd-air-quality-bot/main/images/aqmd_logo.png"
 
 # ── AQI helpers ────────────────────────────────────────────────────────────────
