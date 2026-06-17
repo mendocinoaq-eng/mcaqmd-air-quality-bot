@@ -213,21 +213,35 @@ def post_to_buffer(message, asset_id):
 
     return post_result["post"]
 
+def check_buffer_schema():
+
+    query = """
+    {
+      __schema {
+        mutationType {
+          fields {
+            name
+          }
+        }
+      }
+    }
+    """
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {BUFFER_API_KEY}",
+    }
+
+    resp = requests.post(
+        BUFFER_API_URL,
+        json={"query": query},
+        headers=headers,
+        timeout=30,
+    )
+
+    print("Buffer schema:")
+    print(resp.text)
+
 # ── Main ───────────────────────────────────────────────────────────────────────
 def main():
-    print("Fetching AirNow data for Ukiah (95482)...")
-    data = get_air_quality()
-    print(f"Got {len(data)} reading(s) from AirNow.")
-
-    message = build_message(data)
-    print("\n── Post preview ──────────────────────────────")
-    print(message)
-    print("──────────────────────────────────────────────\n")
-
-    asset_id = upload_image_to_buffer()
-    
-    post = post_to_buffer(message, asset_id)
-    print(f"✅ Posted to Buffer! Post ID: {post['id']} | Status: {post['status']}")
-
-if __name__ == "__main__":
-    main()
+    check_buffer_schema()
