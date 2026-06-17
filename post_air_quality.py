@@ -10,7 +10,6 @@ import time
 import requests
 from datetime import datetime
 import pytz
-import base64
 
 # ── Config (set these as GitHub Secrets) ──────────────────────────────────────
 AIRNOW_API_KEY    = os.environ["AIRNOW_API_KEY"]
@@ -117,41 +116,23 @@ def upload_image_to_buffer():
     image_response = requests.get(image_url, timeout=30)
     image_response.raise_for_status()
 
-    image_data = base64.b64encode(image_response.content).decode("utf-8")
-
-    mutation = """
-    mutation UploadAsset($input: UploadAssetInput!) {
-      uploadAsset(input: $input) {
-        ... on Asset {
-          id
-        }
-        ... on UnexpectedError {
-          message
-        }
-      }
-    }
-    """
-
-    variables = {
-        "input": {
-            "content": image_data,
-            "filename": "aqmd_logo.png"
-        }
+    files = {
+        "file": (
+            "aqmd_logo.png",
+            image_response.content,
+            "image/png"
+        )
     }
 
     headers = {
-        "Content-Type": "application/json",
         "Authorization": f"Bearer {BUFFER_API_KEY}",
     }
 
     resp = requests.post(
-        BUFFER_API_URL,
-        json={
-            "query": mutation,
-            "variables": variables
-        },
+        "https://api.buffer.com/upload",
+        files=files,
         headers=headers,
-        timeout=30,
+        timeout=60,
     )
 
     print("Buffer upload response:")
@@ -161,10 +142,10 @@ def upload_image_to_buffer():
 
     result = resp.json()
 
-    if "errors" in result:
-        raise RuntimeError(result["errors"])
+    if "id" not in result:
+        raise RunTimeError(f"Unexpected Buffer upload response: {result}")
 
-    return result["data"]["uploadAsset"]["id"]
+    return result["id"]
 
 # ── Post to Buffer via GraphQL API ─────────────────────────────────────────────
 def post_to_buffer(message, asset_id):
@@ -245,7 +226,7 @@ def main():
 
     asset_id = upload_image_to_buffer()
     
-    post = post_to_buffer(message)
+    post = post_to_buffer(message, asset_id)
     print(f"✅ Posted to Buffer! Post ID: {post['id']} | Status: {post['status']}")
 
 if __name__ == "__main__":
