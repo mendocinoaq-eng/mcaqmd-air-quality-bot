@@ -245,3 +245,6 @@ def check_buffer_schema():
 # ── Main ───────────────────────────────────────────────────────────────────────
 def main():
     check_buffer_schema()
+
+if __name__ == "__main__":
+    main()
