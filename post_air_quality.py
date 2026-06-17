@@ -10,6 +10,7 @@ import time
 import requests
 from datetime import datetime
 import pytz
+import base64
 
 # ── Config (set these as GitHub Secrets) ──────────────────────────────────────
 AIRNOW_API_KEY    = os.environ["AIRNOW_API_KEY"]
@@ -108,8 +109,65 @@ def build_message(data):
         f"#MendocinoCounty #AirQuality #MCAQMD #CleanAir #Ukiah"
     )
 
+# ── Upload image to Buffer ─────────────────────────────────────────────────────
+def upload_image_to_buffer():
+
+    image_url = AQMD_LOGO_URL
+
+    image_response = requests.get(image_url, timeout=30)
+    image_response.raise_for_status()
+
+    image_data = base64.b64encode(image_response.content).decode("utf-8")
+
+    mutation = """
+    mutation UploadAsset($input: UploadAssetInput!) {
+      uploadAsset(input: $input) {
+        ... on Asset {
+          id
+        }
+        ... on UnexpectedError {
+          message
+        }
+      }
+    }
+    """
+
+    variables = {
+        "input": {
+            "content": image_data,
+            "filename": "aqmd_logo.png"
+        }
+    }
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {BUFFER_API_KEY}",
+    }
+
+    resp = requests.post(
+        BUFFER_API_URL,
+        json={
+            "query": mutation,
+            "variables": variables
+        },
+        headers=headers,
+        timeout=30,
+    )
+
+    print("Buffer upload response:")
+    print(resp.text)
+
+    resp.raise_for_status()
+
+    result = resp.json()
+
+    if "errors" in result:
+        raise RuntimeError(result["errors"])
+
+    return result["data"]["uploadAsset"]["id"]
+
 # ── Post to Buffer via GraphQL API ─────────────────────────────────────────────
-def post_to_buffer(message):
+def post_to_buffer(message, asset_id):
     mutation = """
     mutation CreatePost($input: CreatePostInput!) {
       createPost(input: $input) {
@@ -137,8 +195,7 @@ def post_to_buffer(message):
             "mode":           "shareNow",
             "assets":         [
                 {
-        "url": AQMD_LOGO_URL,
-        "type": "image"
+        "id": asset_id
     }
             ],
             "metadata": {
@@ -186,6 +243,8 @@ def main():
     print(message)
     print("──────────────────────────────────────────────\n")
 
+    asset_id = upload_image_to_buffer()
+    
     post = post_to_buffer(message)
     print(f"✅ Posted to Buffer! Post ID: {post['id']} | Status: {post['status']}")
 
