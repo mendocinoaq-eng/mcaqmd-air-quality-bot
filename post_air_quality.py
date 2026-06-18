@@ -215,12 +215,19 @@ def post_to_buffer(message, asset_id):
 
 def check_buffer_schema():
 
-    query = """
+        query = """
     {
-      __schema {
-        mutationType {
-          fields {
+      __type(name: "CreatePostInput") {
+        name
+        inputFields {
+          name
+          type {
+            kind
             name
+            ofType {
+              kind
+              name
+            }
           }
         }
       }
@@ -235,12 +242,7 @@ def check_buffer_schema():
     resp = requests.post(
         BUFFER_API_URL,
         json={"query": query},
-        headers=headers,
-        timeout=30,
-    )
-
-    print("Buffer schema:")
-    print(resp.text)
+        headers=
 
 # ── Main ───────────────────────────────────────────────────────────────────────
 def main():
