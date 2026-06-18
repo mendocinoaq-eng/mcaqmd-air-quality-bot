@@ -1,4 +1,3 @@
-"""
 MCAQMD Air Quality Facebook Poster (via Buffer)
 Pulls PM2.5 data from AirNow API and posts to the MCAQMD
 Facebook Page through Buffer's GraphQL API.
@@ -18,8 +17,7 @@ BUFFER_CHANNEL_ID = os.environ["BUFFER_CHANNEL_ID"]
 
 UKIAH_ZIP      = "95482"
 TIMEZONE       = pytz.timezone("America/Los_Angeles")
-BUFFER_API_URL = "https://api.buffer.com/graphql"
-AQMD_LOGO_URL = "https://raw.githubusercontent.com/mendocinoaq-eng/mcaqmd-air-quality-bot/main/images/aqmd_logo.png"
+BUFFER_API_URL = "https://api.buffer.com"
 
 # ── AQI helpers ────────────────────────────────────────────────────────────────
 def aqi_category(aqi):
@@ -108,47 +106,8 @@ def build_message(data):
         f"#MendocinoCounty #AirQuality #MCAQMD #CleanAir #Ukiah"
     )
 
-# ── Upload image to Buffer ─────────────────────────────────────────────────────
-def upload_image_to_buffer():
-
-    image_url = AQMD_LOGO_URL
-
-    image_response = requests.get(image_url, timeout=30)
-    image_response.raise_for_status()
-
-    files = {
-        "file": (
-            "aqmd_logo.png",
-            image_response.content,
-            "image/png"
-        )
-    }
-
-    headers = {
-        "Authorization": f"Bearer {BUFFER_API_KEY}",
-    }
-
-    resp = requests.post(
-        "https://api.buffer.com/upload",
-        files=files,
-        headers=headers,
-        timeout=60,
-    )
-
-    print("Buffer upload response:")
-    print(resp.text)
-
-    resp.raise_for_status()
-
-    result = resp.json()
-
-    if "id" not in result:
-        raise RunTimeError(f"Unexpected Buffer upload response: {result}")
-
-    return result["id"]
-
 # ── Post to Buffer via GraphQL API ─────────────────────────────────────────────
-def post_to_buffer(message, asset_id):
+def post_to_buffer(message):
     mutation = """
     mutation CreatePost($input: CreatePostInput!) {
       createPost(input: $input) {
@@ -174,11 +133,7 @@ def post_to_buffer(message, asset_id):
             "channelId":      BUFFER_CHANNEL_ID,
             "schedulingType": "automatic",
             "mode":           "shareNow",
-            "assets":         [
-                {
-        "id": asset_id
-    }
-            ],
+            "assets":         [],
             "metadata": {
                 "facebook": {
                     "type": "post"
@@ -196,10 +151,6 @@ def post_to_buffer(message, asset_id):
         headers=headers,
         timeout=30,
     )
-
-    print("Buffer response:")
-    print(resp.text)
-    
     resp.raise_for_status()
     result = resp.json()
 
@@ -213,45 +164,19 @@ def post_to_buffer(message, asset_id):
 
     return post_result["post"]
 
-def check_buffer_schema():
-
-    query = """
-    {
-      __type(name: "ImageAssetInput") {
-        name
-        inputFields {
-          name
-          type {
-            kind
-            name
-            ofType {
-              kind
-              name
-            }
-          }
-        }
-      }
-    }
-    """
-
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {BUFFER_API_KEY}",
-    }
-
-    resp = requests.post(
-        BUFFER_API_URL,
-        json={"query": query},
-        headers=headers,
-        timeout=30,
-    )
-
-    print("ImageAssetInput schema:")
-    print(resp.text)
-
 # ── Main ───────────────────────────────────────────────────────────────────────
 def main():
-    check_buffer_schema()
+    print("Fetching AirNow data for Ukiah (95482)...")
+    data = get_air_quality()
+    print(f"Got {len(data)} reading(s) from AirNow.")
+
+    message = build_message(data)
+    print("\n── Post preview ──────────────────────────────")
+    print(message)
+    print("──────────────────────────────────────────────\n")
+
+    post = post_to_buffer(message)
+    print(f"✅ Posted to Buffer! Post ID: {post['id']} | Status: {post['status']}")
 
 if __name__ == "__main__":
     main()
