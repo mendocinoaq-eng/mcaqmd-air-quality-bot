@@ -217,7 +217,7 @@ def check_buffer_schema():
 
     query = """
     {
-      __type(name: "AssetInput") {
+      __type(name: "ImageAssetInput") {
         name
         inputFields {
           name
@@ -246,7 +246,7 @@ def check_buffer_schema():
         timeout=30,
     )
 
-    print("AssetInput schema:")
+    print("ImageAssetInput schema:")
     print(resp.text)
 
 # ── Main ───────────────────────────────────────────────────────────────────────
