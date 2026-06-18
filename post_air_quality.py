@@ -215,7 +215,7 @@ def post_to_buffer(message, asset_id):
 
 def check_buffer_schema():
 
-        query = """
+    query = """
     {
       __type(name: "CreatePostInput") {
         name
@@ -242,7 +242,12 @@ def check_buffer_schema():
     resp = requests.post(
         BUFFER_API_URL,
         json={"query": query},
-        headers=
+        headers=headers,
+        timeout=30,
+    )
+
+    print("CreatePostInput schema:")
+    print(resp.text)
 
 # ── Main ───────────────────────────────────────────────────────────────────────
 def main():
