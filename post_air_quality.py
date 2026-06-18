@@ -217,7 +217,7 @@ def check_buffer_schema():
 
     query = """
     {
-      __type(name: "CreatePostInput") {
+      __type(name: "AssetInput") {
         name
         inputFields {
           name
@@ -246,7 +246,7 @@ def check_buffer_schema():
         timeout=30,
     )
 
-    print("CreatePostInput schema:")
+    print("AssetInput schema:")
     print(resp.text)
 
 # ── Main ───────────────────────────────────────────────────────────────────────
